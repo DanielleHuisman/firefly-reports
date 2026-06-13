@@ -1,0 +1,18 @@
+[package]
+name = "firefly-reports-api"
+publish = false
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[features]
+server = ["dioxus/server"]
+
+[dependencies]
+dioxus = { workspace = true, features = ["fullstack"] }
+
+[lints]
+workspace = true

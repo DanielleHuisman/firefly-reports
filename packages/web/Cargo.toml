@@ -1,0 +1,22 @@
+[package]
+name = "firefly-reports-web"
+publish = false
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[features]
+default = []
+web = ["dioxus/web"]
+server = ["dioxus/server"]
+# server = ["dioxus/server", "firefly-reports-ui/server"]
+
+[dependencies]
+dioxus = { workspace = true, features = ["router", "fullstack"] }
+# firefly-reports-ui.workspace = true
+
+[lints]
+workspace = true

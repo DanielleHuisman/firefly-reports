@@ -1,0 +1,14 @@
+{
+    "name": "@daniellehuisman/firefly-reports",
+    "description": "Reports for Firefly III.",
+    "author": "Daniëlle Huisman <danielle@huisman.me>",
+    "repository": "github:DanielleHuisman/firefly-reports",
+    "license": "UNLICENSED",
+    "private": true,
+    "scripts": {},
+    "devDependencies": {
+        "@commitlint/cli": "^21.0.2",
+        "@commitlint/config-conventional": "^21.0.2",
+        "prettier": "^3.8.4"
+    }
+}

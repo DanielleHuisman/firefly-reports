@@ -1,0 +1,23 @@
+[workspace]
+members = ["packages/*"]
+resolver = "3"
+
+[workspace.package]
+authors = ["Daniëlle Huisman <danielle@huisman.me>"]
+edition = "2024"
+license = "MIT"
+repository = "https://github.com/DanielleHuisman/firefly-reports"
+version = "0.0.1"
+
+[workspace.dependencies]
+dioxus = { version = "0.7.1" }
+firefly-reports-api = { path = "./packages/api" }
+firefly-reports-ui = { path = "./packages/ui" }
+
+[workspace.lints.rust]
+unsafe_code = "deny"
+
+[workspace.lints.clippy]
+expect_used = "deny"
+panic = "deny"
+unwrap_used = "deny"

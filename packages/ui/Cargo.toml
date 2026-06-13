@@ -1,0 +1,20 @@
+[package]
+name = "firefly-reports-ui"
+publish = false
+
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[features]
+server = []
+# server = ["firefly-reports-api/server"]
+
+[dependencies]
+# dioxus = { workspace = true }
+# firefly-reports-api = { workspace = true }
+
+[lints]
+workspace = true

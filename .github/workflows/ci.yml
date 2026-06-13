@@ -1,0 +1,36 @@
+name: CI
+
+on:
+    pull_request: {}
+    push:
+        branches:
+            - main
+
+permissions:
+    contents: read
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: false
+
+jobs:
+    commits:
+        name: Commits
+        uses: NixySoftware/.github/.github/workflows/commits.yml@69872c1a394b92973a42797e1bd19441722101bc # v0.5.0
+
+        permissions:
+            contents: read
+            packages: read
+
+    rust:
+        name: Rust
+        uses: NixySoftware/.github/.github/workflows/rust.yml@69872c1a394b92973a42797e1bd19441722101bc # v0.5.0
+
+    typescript:
+        name: TypeScript
+        uses: NixySoftware/.github/.github/workflows/typescript.yml@69872c1a394b92973a42797e1bd19441722101bc # v0.5.0
+
+        with:
+            enable-lint: false
+            enable-dependencies: false
+            enable-test: false
