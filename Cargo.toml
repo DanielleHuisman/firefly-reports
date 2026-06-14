@@ -10,9 +10,23 @@ repository = "https://github.com/DanielleHuisman/firefly-reports"
 version = "0.0.1"
 
 [workspace.dependencies]
+anyhow = "1.0.102"
 dioxus = { version = "0.7.1" }
-firefly-reports-api = { path = "./packages/api" }
+firefly-reports-api = { path = "./packages/api", default-features = false }
 firefly-reports-ui = { path = "./packages/ui" }
+serde = "1.0.228"
+shield = "0.3.0"
+shield-bootstrap = "0.3.0"
+shield-dioxus = "0.3.0"
+shield-dioxus-axum = "0.3.0"
+shield-memory = "0.3.0"
+shield-oauth = "0.3.0"
+# shield = { path = "../../RustForWeb/shield/packages/core/shield" }
+# shield-bootstrap = { path = "../../RustForWeb/shield/packages/styles/shield-bootstrap" }
+# shield-dioxus = { path = "../../RustForWeb/shield/packages/integrations/shield-dioxus" }
+# shield-dioxus-axum = { path = "../../RustForWeb/shield/packages/integrations/shield-dioxus-axum" }
+# shield-memory = { path = "../../RustForWeb/shield/packages/storage/shield-memory" }
+# shield-oauth = { path = "../../RustForWeb/shield/packages/methods/shield-oauth" }
 
 [workspace.lints.rust]
 unsafe_code = "deny"

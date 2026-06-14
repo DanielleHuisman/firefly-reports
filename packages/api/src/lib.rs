@@ -1,6 +1,7 @@
-use dioxus::prelude::*;
+#[cfg(feature = "server")]
+mod client;
+mod report;
+mod user;
 
-#[post("/api/echo")]
-pub async fn echo(input: String) -> Result<String, ServerFnError> {
-    Ok(input)
-}
+pub use report::*;
+pub use user::*;
