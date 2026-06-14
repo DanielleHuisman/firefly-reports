@@ -27,6 +27,9 @@ server = [
 axum = { version = "0.8.9", optional = true }
 dioxus = { workspace = true, features = ["router", "fullstack"] }
 firefly-reports-api.workspace = true
+icu = "2.2.0"
+itertools.workspace = true
+rust_decimal.workspace = true
 shield = { workspace = true, optional = true }
 shield-bootstrap = { workspace = true, features = ["dioxus"] }
 shield-dioxus.workspace = true
