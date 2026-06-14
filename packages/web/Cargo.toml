@@ -11,12 +11,31 @@ version.workspace = true
 [features]
 default = []
 web = ["dioxus/web"]
-server = ["dioxus/server"]
-# server = ["dioxus/server", "firefly-reports-ui/server"]
+server = [
+    "dep:axum",
+    "dep:shield",
+    "dep:shield-dioxus-axum",
+    "dep:shield-memory",
+    "dep:shield-oauth",
+    "dep:tower-sessions",
+    "shield-dioxus/server",
+    "dioxus/server",
+    "firefly-reports-api/server",
+]
 
 [dependencies]
+axum = { version = "0.8.9", optional = true }
 dioxus = { workspace = true, features = ["router", "fullstack"] }
-# firefly-reports-ui.workspace = true
+firefly-reports-api.workspace = true
+shield = { workspace = true, optional = true }
+shield-bootstrap = { workspace = true, features = ["dioxus"] }
+shield-dioxus.workspace = true
+shield-dioxus-axum = { workspace = true, optional = true }
+shield-memory = { workspace = true, optional = true, features = [
+    "method-oauth",
+] }
+shield-oauth = { workspace = true, optional = true }
+tower-sessions = { version = "0.15.0", optional = true }
 
 [lints]
 workspace = true
