@@ -12,6 +12,7 @@ version.workspace = true
 default = ["server"]
 server = [
     "dep:firefly-iii",
+    "dep:futures",
     "dep:itertools",
     "dep:secrecy",
     "dep:shield-dioxus-axum",
@@ -26,6 +27,7 @@ dioxus = { workspace = true, features = ["fullstack"] }
 firefly-iii = { git = "https://github.com/NixySoftware/firefly-iii", rev = "9b7192b", features = [
     "bon",
 ], optional = true }
+futures = { version = "0.3.32", optional = true }
 itertools = { workspace = true, optional = true }
 rust_decimal.workspace = true
 secrecy = { version = "0.10.3", optional = true }

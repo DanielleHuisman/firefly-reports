@@ -29,6 +29,7 @@ dioxus = { workspace = true, features = ["router", "fullstack"] }
 firefly-reports-api.workspace = true
 icu = "2.2.0"
 itertools.workspace = true
+jiff = { version = "0.2.28", features = ["js"] }
 rust_decimal.workspace = true
 shield = { workspace = true, optional = true }
 shield-bootstrap = { workspace = true, features = ["dioxus"] }
