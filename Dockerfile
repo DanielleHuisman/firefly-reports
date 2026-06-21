@@ -25,6 +25,8 @@ RUN --mount=type=cache,target=/usr/local/cargo/registry \
 
 FROM base AS builder
 
+RUN cargo binstall -y dioxus-cli@0.7.9
+
 WORKDIR /usr/src/firefly-reports
 
 COPY --from=planner /usr/src/firefly-reports/recipe.json recipe.json
