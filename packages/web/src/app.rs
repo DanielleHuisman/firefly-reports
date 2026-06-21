@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 use shield_dioxus::ShieldRouter;
 
-use crate::views::Home;
+use crate::views::{Home, ProfitAndLoss};
 
 const FAVICON: Asset = asset!("/assets/favicon.ico");
 
@@ -10,6 +10,11 @@ const FAVICON: Asset = asset!("/assets/favicon.ico");
 enum Route {
     #[route("/")]
     Home {},
+    #[route("/profit-and-loss?:start&:end")]
+    ProfitAndLoss {
+        start: Option<String>,
+        end: Option<String>,
+    },
     #[child("/auth")]
     Auth {
         child: ShieldRouter

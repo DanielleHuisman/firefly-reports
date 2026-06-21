@@ -7,7 +7,7 @@ use shield_dioxus_axum::{ExtractShield, UserRequired};
 #[cfg(feature = "server")]
 use shield_memory::User as ShieldUser;
 
-#[derive(Deserialize, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct ProfitAndLossReport {
     pub credit: Vec<ReportCategory>,
     pub credit_total: Decimal,
@@ -15,17 +15,17 @@ pub struct ProfitAndLossReport {
     pub debit_total: Decimal,
 }
 
-#[derive(Deserialize, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct ReportCategory {
     pub id: String,
     pub name: String,
     pub amount: Decimal,
 }
 
-#[get("/api/profit-and-loss-report?started_at&ended_at", shield: ExtractShield<ShieldUser>, user: UserRequired<ShieldUser>)]
+#[get("/api/profit-and-loss-report?start&end", shield: ExtractShield<ShieldUser>, user: UserRequired<ShieldUser>)]
 pub async fn profit_and_loss_report(
-    started_at: String,
-    ended_at: String,
+    start: String,
+    end: String,
 ) -> Result<ProfitAndLossReport, ServerFnError> {
     use anyhow::Context;
     use firefly_iii::apis::{
@@ -33,6 +33,7 @@ pub async fn profit_and_loss_report(
         categories_api::ListCategoryParams,
         insight_api::{InsightExpenseCategoryParams, InsightIncomeCategoryParams},
     };
+    use futures::join;
     use itertools::Itertools;
     use rust_decimal::dec;
 
@@ -40,33 +41,27 @@ pub async fn profit_and_loss_report(
 
     let client = firefly_client(shield, user).await?;
 
-    let categories = client
-        .categories_api()
-        .list_category(ListCategoryParams::builder().limit(100).page(1).build())
-        .await
-        .context("failed to list categories")?;
-
-    let income_entries = client
-        .insight_api()
-        .insight_income_category(
+    let (categories, income_entries, expense_entries) = join!(
+        client
+            .categories_api()
+            .list_category(ListCategoryParams::builder().limit(100).page(1).build()),
+        client.insight_api().insight_income_category(
             InsightIncomeCategoryParams::builder()
-                .start(started_at.to_owned())
-                .end(ended_at.to_owned())
+                .start(start.to_owned())
+                .end(end.to_owned())
                 .build(),
-        )
-        .await
-        .context("failed to list income by category")?;
-
-    let expense_entries = client
-        .insight_api()
-        .insight_expense_category(
+        ),
+        client.insight_api().insight_expense_category(
             InsightExpenseCategoryParams::builder()
-                .start(started_at.to_owned())
-                .end(ended_at.to_owned())
+                .start(start.to_owned())
+                .end(end.to_owned())
                 .build(),
         )
-        .await
-        .context("failed to list expenses by category")?;
+    );
+
+    let categories = categories.context("failed to list categories")?;
+    let income_entries = income_entries.context("failed to list income by category")?;
+    let expense_entries = expense_entries.context("failed to list expenses by category")?;
 
     let entries = income_entries
         .into_iter()
