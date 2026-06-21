@@ -9,6 +9,14 @@ use shield_memory::User as ShieldUser;
 
 #[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
 pub struct ProfitAndLossReport {
+    pub groups: Vec<ReportGroup>,
+    pub credit_total: Decimal,
+    pub debit_total: Decimal,
+}
+
+#[derive(Clone, Debug, Deserialize, PartialEq, Serialize)]
+pub struct ReportGroup {
+    pub name: String,
     pub credit: Vec<ReportCategory>,
     pub credit_total: Decimal,
     pub debit: Vec<ReportCategory>,
@@ -27,6 +35,8 @@ pub async fn profit_and_loss_report(
     start: String,
     end: String,
 ) -> Result<ProfitAndLossReport, ServerFnError> {
+    use std::collections::HashMap;
+
     use anyhow::Context;
     use firefly_iii::apis::{
         Api,
@@ -100,35 +110,84 @@ pub async fn profit_and_loss_report(
         .try_collect()
         .context("failed to process entries")?;
 
-    let (mut credit, mut debit): (Vec<_>, Vec<_>) = categories
-        .into_iter()
-        .partition(|category| category.amount >= dec!(0));
+    let (credit, debit) = partition(categories);
+    let credit_total = total(&credit);
+    let debit_total = -total(&debit);
 
-    for entry in &mut credit {
-        entry.amount = entry.amount.round_dp(2);
+    let mut groups: HashMap<&'static str, ReportGroup> = HashMap::new();
+    for (group_name, categories) in &credit.into_iter().chain(debit).chunk_by(|category| {
+        use crate::categories::CATEGORY_GROUPS;
+
+        CATEGORY_GROUPS
+            .iter()
+            .find_map(|group| {
+                group
+                    .category_names
+                    .contains(&category.name.as_str())
+                    .then_some(group.name)
+            })
+            .unwrap_or("Onbekend")
+    }) {
+        let (mut credit, mut debit) = partition(categories);
+
+        for entry in &mut credit {
+            entry.amount = entry.amount.round_dp(2);
+        }
+        for entry in &mut debit {
+            entry.amount = (-entry.amount).round_dp(2);
+        }
+
+        let credit_total = total(&credit);
+        let debit_total = total(&debit);
+
+        groups
+            .entry(group_name)
+            .and_modify(|group| {
+                group.credit.append(&mut credit);
+                group.debit.append(&mut debit);
+                group.credit_total += credit_total;
+                group.debit_total += debit_total;
+            })
+            .or_insert_with(|| ReportGroup {
+                name: group_name.to_owned(),
+                credit,
+                credit_total,
+                debit,
+                debit_total,
+            });
     }
-    for entry in &mut debit {
-        entry.amount = (-entry.amount).round_dp(2);
+
+    let mut groups = groups.into_values().collect::<Vec<_>>();
+    groups.sort_by(|a, b| a.name.cmp(&b.name));
+
+    for group in &mut groups {
+        group.credit.sort_by(|a, b| a.name.cmp(&b.name));
+        group.debit.sort_by(|a, b| a.name.cmp(&b.name));
     }
-
-    credit.sort_by(|a, b| a.name.cmp(&b.name));
-    debit.sort_by(|a, b| a.name.cmp(&b.name));
-
-    let credit_total = credit
-        .iter()
-        .map(|category| category.amount)
-        .sum::<Decimal>()
-        .round_dp(2);
-    let debit_total = debit
-        .iter()
-        .map(|category| category.amount)
-        .sum::<Decimal>()
-        .round_dp(2);
 
     Ok(ProfitAndLossReport {
-        credit,
+        groups,
         credit_total,
-        debit,
         debit_total,
     })
+}
+
+#[cfg(feature = "server")]
+fn partition(
+    categories: impl IntoIterator<Item = ReportCategory>,
+) -> (Vec<ReportCategory>, Vec<ReportCategory>) {
+    use rust_decimal::dec;
+
+    categories
+        .into_iter()
+        .partition(|category| category.amount >= dec!(0))
+}
+
+#[cfg(feature = "server")]
+fn total(categories: &[ReportCategory]) -> Decimal {
+    categories
+        .iter()
+        .map(|category| category.amount)
+        .sum::<Decimal>()
+        .round_dp(2)
 }

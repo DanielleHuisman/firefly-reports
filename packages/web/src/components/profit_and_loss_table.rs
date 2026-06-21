@@ -1,5 +1,5 @@
 use dioxus::prelude::*;
-use firefly_reports_api::ProfitAndLossReport;
+use firefly_reports_api::{ProfitAndLossReport, ReportGroup};
 use itertools::{EitherOrBoth, Itertools};
 
 use crate::components::currency::Currency;
@@ -15,12 +15,12 @@ pub fn ProfitAndLossTable(report: ProfitAndLossReport) -> Element {
                 tr {
                     th {
                         class: "border-top border-bottom border-start border-end",
-                        colspan: 2,
+                        colspan: 3,
                         "Debit"
                     }
                     th {
                         class: "border-top border-bottom border-start border-end",
-                        colspan: 2,
+                        colspan: 3,
                         "Credit"
                     }
                 }
@@ -30,98 +30,38 @@ pub fn ProfitAndLossTable(report: ProfitAndLossReport) -> Element {
                         "Category"
                     }
                     th {
-                        class: "border-top border-bottom border-end",
+                        class: "border-top border-bottom",
                         "Amount"
+                    }
+                    th {
+                        class: "border-top border-bottom border-end",
+                        "Total"
                     }
                     th {
                         class: "border-top border-bottom border-start",
                         "Category"
                     }
                     th {
-                        class: "border-top border-bottom border-end",
+                        class: "border-top border-bottom",
                         "Amount"
+                    }
+                    th {
+                        class: "border-top border-bottom border-end",
+                        "Total"
                     }
                 }
             }
             tbody {
-                {report.debit
-                    .iter()
-                    .zip_longest(report.credit.iter())
-                    .map(|pair| {
-                        match pair {
-                            EitherOrBoth::Both(left, right) => {
-                                rsx! {
-                                    tr {
-                                        td {
-                                            class: "border-start",
-                                            "{left.name}"
-                                        }
-                                        td {
-                                            class: "border-end text-end",
-                                            Currency {
-                                                amount: left.amount
-                                            }
-                                        }
-                                        td {
-                                            class: "border-start",
-                                            "{right.name}"
-                                        }
-                                        td {
-                                            class: "border-end text-end",
-                                            Currency {
-                                                amount: right.amount
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            EitherOrBoth::Left(left) => {
-                                rsx! {
-                                    tr {
-                                        td {
-                                            class: "border-start",
-                                            "{left.name}"
-                                        },
-                                        td {
-                                            class: "border-end text-end",
-                                            Currency {
-                                                amount: left.amount
-                                            }
-                                        }
-                                        td {
-                                            class: "border-start border-end",
-                                            colspan: 2
-                                        }
-                                    }
-                                }
-                            },
-                            EitherOrBoth::Right(right) => {
-                                rsx! {
-                                    tr {
-                                        td {
-                                            class: "border-start border-end",
-                                            colspan: 2
-                                        },
-                                        td {
-                                            class: "border-end",
-                                            "{right.name}"
-                                        },
-                                        td {
-                                            class: "border-start text-end",
-                                            Currency {
-                                                amount: right.amount
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    })
+                for group in report.groups {
+                    Group {
+                        group
+                    }
                 }
 
                 tr {
                     th {
                         class: "border-top border-bottom border-start",
+                        colspan: 2,
                         "Total"
                     }
                     th {
@@ -132,6 +72,7 @@ pub fn ProfitAndLossTable(report: ProfitAndLossReport) -> Element {
                     }
                     th {
                         class: "border-top border-bottom border-start",
+                        colspan: 2,
                         "Total"
                     }
                     th {
@@ -140,6 +81,134 @@ pub fn ProfitAndLossTable(report: ProfitAndLossReport) -> Element {
                             amount: report.credit_total
                         }
                     }
+                }
+            }
+        }
+    }
+}
+
+#[component]
+fn Group(group: ReportGroup) -> Element {
+    rsx! {
+        tr {
+            td {
+                class: "border-start border-end fw-bold",
+                colspan: 3,
+                "{group.name}"
+            }
+            td {
+                class: "border-start border-end fw-bold",
+                colspan: 3,
+                "{group.name}"
+            }
+        }
+
+        {group.debit
+            .into_iter()
+            .zip_longest(group.credit)
+            .map(|pair| {
+                match pair {
+                    EitherOrBoth::Both(left, right) => {
+                        rsx! {
+                            tr {
+                                td {
+                                    class:"border-start",
+                                    "{left.name}"
+                                }
+                                td {
+                                    class: "text-end",
+                                    Currency {
+                                        amount: left.amount
+                                    }
+                                }
+                                td {
+                                    class: "border-end"
+                                }
+                                td {
+                                    class: "border-start",
+                                    "{right.name}"
+                                }
+                                td {
+                                    class: "text-end",
+                                    Currency {
+                                        amount: right.amount
+                                    }
+                                }
+                                td {
+                                    class: "border-end"
+                                }
+                            }
+                        }
+                    },
+                    EitherOrBoth::Left(left) => {
+                        rsx! {
+                            tr {
+                                td {
+                                    class: "border-start",
+                                    "{left.name}"
+                                },
+                                td {
+                                    class: "text-end",
+                                    Currency {
+                                        amount: left.amount
+                                    }
+                                }
+                                td {
+                                    class: "border-end",
+                                }
+                                td {
+                                    class: "border-start border-end",
+                                    colspan: 3
+                                }
+                            }
+                        }
+                    },
+                    EitherOrBoth::Right(right) => {
+                        rsx! {
+                            tr {
+                                td {
+                                    class: "border-start border-end",
+                                    colspan: 3
+                                },
+                                td {
+                                    class: "border-start",
+                                    "{right.name}"
+                                },
+                                td {
+                                    class: "text-end",
+                                    Currency {
+                                        amount: right.amount
+                                    }
+                                }
+                                td {
+                                    class: "border-end"
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+        }
+
+        tr {
+            td {
+                class: "border-start",
+                colspan: 2,
+            }
+            td {
+                class: "border-end text-end fw-bold",
+                Currency {
+                    amount: group.debit_total,
+                }
+            }
+            td {
+                class: "border-start",
+                colspan: 2,
+            }
+            td {
+                class: "border-end text-end fw-bold",
+                Currency {
+                    amount: group.credit_total,
                 }
             }
         }

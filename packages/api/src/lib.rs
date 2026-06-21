@@ -1,7 +1,9 @@
 #[cfg(feature = "server")]
+mod categories;
+#[cfg(feature = "server")]
 mod client;
-mod report;
+mod profit_and_loss;
 mod user;
 
-pub use report::*;
+pub use profit_and_loss::*;
 pub use user::*;
