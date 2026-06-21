@@ -12,7 +12,7 @@ struct Dates {
 
 #[component]
 pub fn ProfitAndLoss(start: Option<String>, end: Option<String>) -> Element {
-    let mut dates = use_signal(|| Dates {
+    let dates = use_signal(|| Dates {
         start: start
             .and_then(|start| start.parse().ok())
             .unwrap_or_else(|| {
@@ -38,82 +38,18 @@ pub fn ProfitAndLoss(start: Option<String>, end: Option<String>) -> Element {
                 "Profit and Loss"
             }
 
-            div {
-                class: "d-flex align-items-center justify-content-center gap-2 mb-2",
-
-                button {
-                    class: "btn btn-primary",
-                    onclick: move |_| dates.with_mut(|dates| {
-                        dates.start -= 1.year();
-                        dates.end -= 1.year();
-                    }),
-                    "«"
-                }
-
-                button {
-                    class: "btn btn-primary",
-                    onclick: move |_| dates.with_mut(|dates| {
-                        dates.start -= 1.month();
-                        dates.end -= 1.month();
-                    }),
-                    "‹"
-                }
-
-                div {
-                    input {
-                        class: "form-control",
-                        name: "start",
-                        placeholder: "Start",
-                        "aria-label": "Start",
-                        type: "date",
-                        value: "{dates().start}",
-                        onchange: move |event| {
-                            let date = event.value().parse().context("failed to parse date")?;
-                            dates.with_mut(|dates| dates.start = date);
-                            Ok(())
-                        }
-                    }
-                }
-
-                div {
-                    input {
-                        class: "form-control",
-                        name: "end",
-                        placeholder: "End",
-                        "aria-label": "End",
-                        type: "date",
-                        value: "{dates().end}",
-                        onchange: move |event| {
-                            let date = event.value().parse().context("failed to parse date")?;
-                            dates.with_mut(|dates| dates.end = date);
-                            Ok(())
-                        }
-                    }
-                }
-
-                button {
-                    class: "btn btn-primary",
-                    onclick: move |_| dates.with_mut(|dates| {
-                        dates.start += 1.month();
-                        dates.end += 1.month();
-                    }),
-                    "›"
-                }
-
-                button {
-                    class: "btn btn-primary",
-                    onclick: move |_| dates.with_mut(|dates| {
-                        dates.start += 1.year();
-                        dates.end += 1.year();
-                    }),
-                    "»"
-                }
-            }
-
             match &*report.read_unchecked() {
                 Some(Ok(report)) => rsx! {
+                    Navigation {
+                        dates
+                    }
+
                     ProfitAndLossTable {
                         report: report.clone()
+                    }
+
+                    Navigation {
+                        dates
                     }
                 },
                 Some(Err(err)) => {
@@ -132,6 +68,83 @@ pub fn ProfitAndLoss(start: Option<String>, end: Option<String>) -> Element {
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+#[component]
+fn Navigation(dates: Signal<Dates>) -> Element {
+    rsx! {
+        div {
+            class: "d-flex align-items-center justify-content-center gap-2 mb-2",
+
+            button {
+                class: "btn btn-primary",
+                onclick: move |_| dates.with_mut(|dates| {
+                    dates.start -= 1.year();
+                    dates.end -= 1.year();
+                }),
+                "«"
+            }
+
+            button {
+                class: "btn btn-primary",
+                onclick: move |_| dates.with_mut(|dates| {
+                    dates.start -= 1.month();
+                    dates.end -= 1.month();
+                }),
+                "‹"
+            }
+
+            div {
+                input {
+                    class: "form-control",
+                    name: "start",
+                    placeholder: "Start",
+                    "aria-label": "Start",
+                    type: "date",
+                    value: "{dates().start}",
+                    onchange: move |event| {
+                        let date = event.value().parse().context("failed to parse date")?;
+                        dates.with_mut(|dates| dates.start = date);
+                        Ok(())
+                    }
+                }
+            }
+
+            div {
+                input {
+                    class: "form-control",
+                    name: "end",
+                    placeholder: "End",
+                    "aria-label": "End",
+                    type: "date",
+                    value: "{dates().end}",
+                    onchange: move |event| {
+                        let date = event.value().parse().context("failed to parse date")?;
+                        dates.with_mut(|dates| dates.end = date);
+                        Ok(())
+                    }
+                }
+            }
+
+            button {
+                class: "btn btn-primary",
+                onclick: move |_| dates.with_mut(|dates| {
+                    dates.start += 1.month();
+                    dates.end += 1.month();
+                }),
+                "›"
+            }
+
+            button {
+                class: "btn btn-primary",
+                onclick: move |_| dates.with_mut(|dates| {
+                    dates.start += 1.year();
+                    dates.end += 1.year();
+                }),
+                "»"
             }
         }
     }
