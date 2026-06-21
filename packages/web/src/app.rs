@@ -8,13 +8,14 @@ const FAVICON: Asset = asset!("/assets/favicon.ico");
 #[derive(Clone, Debug, PartialEq, Routable)]
 #[rustfmt::skip]
 enum Route {
-    #[route("/")]
-    Home {},
-    #[route("/profit-and-loss?:start&:end")]
-    ProfitAndLoss {
-        start: Option<String>,
-        end: Option<String>,
-    },
+    #[layout(Layout)]
+        #[route("/")]
+        Home {},
+        #[route("/profit-and-loss?:start&:end")]
+        ProfitAndLoss {
+            start: Option<String>,
+            end: Option<String>,
+        },
     #[child("/auth")]
     Auth {
         child: ShieldRouter
@@ -34,20 +35,37 @@ pub fn App() -> Element {
 
         Title { "Firefly III Reports" }
 
+        Router::<Route> {}
+    }
+}
+
+#[component]
+pub fn Layout() -> Element {
+    rsx! {
         ErrorBoundary {
             handle_error: |error_context: ErrorContext| {
                 let error_string = format!("{:?}", error_context.error());
                 let is_unauthorized = error_string.contains("401") || error_string.contains("Unauthorized");
 
+                let route = use_route::<Route>();
+
                 rsx! {
                     div {
+                        class: "container",
+
                         if is_unauthorized {
                             div {
-                                p { "You must be logged in to view this page." }
-                                a { href: "/auth/sign-in", "Sign in" }
+                                h1 { "Unauthorized" }
+                                p { "You must be signed in to view this page." }
+                                a {
+                                    class: "btn btn-primary",
+                                    href: "/auth/sign-in?redirectUrl={route}",
+                                    "Sign in"
+                                }
                             }
                         } else {
                             div {
+                                h1 { "Error" }
                                 p { "An unexpected error occurred." }
                                 p { "{error_string}" }
                                 button { onclick: move |_| error_context.clear_errors(), "Try again" }
@@ -56,7 +74,8 @@ pub fn App() -> Element {
                     }
                 }
             },
-            Router::<Route> {}
+
+            Outlet::<Route> {}
         }
     }
 }
