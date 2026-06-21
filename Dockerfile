@@ -39,7 +39,7 @@ COPY . .
 
 RUN --mount=type=cache,target=/usr/local/cargo/registry \
     --mount=type=cache,target=$SCCACHE_DIR,sharing=locked \
-    dx bundle --locked --release --web
+    dx bundle --locked --release -p firefly-reports-web --web
 
 # Container
 
