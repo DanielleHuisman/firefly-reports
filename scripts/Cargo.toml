@@ -1,0 +1,12 @@
+[package]
+name = "scripts"
+publish = false
+
+authors.workspace = true
+edition.workspace = true
+repository.workspace = true
+version.workspace = true
+
+[dependencies]
+base64 = "0.22.1"
+cookie = { version = "0.18.1", features = ["private"] }
