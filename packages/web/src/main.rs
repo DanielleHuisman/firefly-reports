@@ -30,6 +30,7 @@ fn main() {
         let firefly_url = env::var("FIREFLY_URL")?;
         let firefly_client_id = env::var("FIREFLY_CLIENT_ID")?;
         let firefly_client_secret = env::var("FIREFLY_CLIENT_SECRET")?;
+        let firefly_redirect_url = env::var("FIREFLY_REDIRECT_URL").ok();
 
         let addr = fullstack_address_or_localhost();
 
@@ -56,12 +57,14 @@ fn main() {
                     .user_id_path("id")
                     .user_email_path("attributes.email")
                     .user_name_path("attributes.name")
-                    .redirect_url(format!(
-                        "http://localhost:{}/api/auth/sign-in-callback/oauth/firefly",
-                        dioxus::cli_config::devserver_raw_addr()
-                            .map(|addr| addr.port())
-                            .unwrap_or_else(|| addr.port())
-                    ))
+                    .redirect_url(firefly_redirect_url.unwrap_or_else(|| {
+                        format!(
+                            "http://localhost:{}/api/auth/sign-in-callback/oauth/firefly",
+                            dioxus::cli_config::devserver_raw_addr()
+                                .map(|addr| addr.port())
+                                .unwrap_or_else(|| addr.port())
+                        )
+                    }))
                     .icon_url("https://docs.firefly-iii.org/images/logo.png")
                     .build()]),
             )],
