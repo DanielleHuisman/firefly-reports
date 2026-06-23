@@ -17,12 +17,12 @@ firefly-reports-ui = { path = "./packages/ui" }
 itertools = "0.14.0"
 rust_decimal = { version = "1.42.1", features = ["macros", "serde-str"] }
 serde = "1.0.228"
-shield = "0.3.0"
-shield-bootstrap = "0.3.0"
-shield-dioxus = "0.3.0"
-shield-dioxus-axum = "0.3.0"
-shield-memory = "0.3.0"
-shield-oauth = "0.3.0"
+shield = "0.3.1"
+shield-bootstrap = "0.3.1"
+shield-dioxus = "0.3.1"
+shield-dioxus-axum = "0.3.1"
+shield-memory = "0.3.1"
+shield-oauth = "0.3.1"
 # shield = { path = "../../RustForWeb/shield/packages/core/shield" }
 # shield-bootstrap = { path = "../../RustForWeb/shield/packages/styles/shield-bootstrap" }
 # shield-dioxus = { path = "../../RustForWeb/shield/packages/integrations/shield-dioxus" }
