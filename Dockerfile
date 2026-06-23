@@ -45,6 +45,8 @@ RUN --mount=type=cache,target=/usr/local/cargo/registry \
 
 FROM debian:trixie-slim
 
+RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
+
 COPY --from=builder /usr/src/firefly-reports/target/dx/firefly-reports-web/release/web/ /usr/local/firefly-reports-web
 
 WORKDIR /usr/local/firefly-reports-web
