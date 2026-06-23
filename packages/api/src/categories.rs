@@ -43,6 +43,13 @@ pub static CATEGORY_GROUPS: &[CategoryGroup] = &[
         ],
     },
     CategoryGroup {
+        name: "Gezamelijke rekening",
+        category_names: &[
+            "Inleg gezamelijke rekening",
+            "Inleg gezamelijke rekening partner",
+        ],
+    },
+    CategoryGroup {
         name: "Kleding",
         category_names: &["Kleding", "Schoenen", "Sierraden", "Tassen"],
     },
