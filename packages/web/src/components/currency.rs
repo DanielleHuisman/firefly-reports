@@ -22,7 +22,7 @@ pub fn Currency(amount: Decimal) -> Element {
 
     rsx! {
         span {
-            class: "font-monospace",
+            class: "font-monospace text-nowrap",
             "€ {amount}"
         }
     }
