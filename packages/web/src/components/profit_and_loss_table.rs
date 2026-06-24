@@ -7,78 +7,81 @@ use crate::components::currency::Currency;
 #[component]
 pub fn ProfitAndLossTable(report: ProfitAndLossReport) -> Element {
     rsx! {
-        table {
-            class: "table table-borderless table-sm",
-            style: "table-layout: fixed;",
+        div {
+            class: "table-responsive",
 
-            thead {
-                tr {
-                    th {
-                        class: "border-top border-bottom border-start border-end",
-                        colspan: 3,
-                        "Debit"
-                    }
-                    th {
-                        class: "border-top border-bottom border-start border-end",
-                        colspan: 3,
-                        "Credit"
-                    }
-                }
-                tr {
-                    th {
-                        class: "border-top border-bottom border-start",
-                        "Category"
-                    }
-                    th {
-                        class: "border-top border-bottom",
-                        "Amount"
-                    }
-                    th {
-                        class: "border-top border-bottom border-end",
-                        "Total"
-                    }
-                    th {
-                        class: "border-top border-bottom border-start",
-                        "Category"
-                    }
-                    th {
-                        class: "border-top border-bottom",
-                        "Amount"
-                    }
-                    th {
-                        class: "border-top border-bottom border-end",
-                        "Total"
-                    }
-                }
-            }
-            tbody {
-                for group in report.groups {
-                    Group {
-                        group
-                    }
-                }
+            table {
+                class: "table table-borderless table-sm",
 
-                tr {
-                    th {
-                        class: "border-top border-bottom border-start",
-                        colspan: 2,
-                        "Total"
-                    }
-                    th {
-                        class: "border-top border-bottom border-end text-end",
-                        Currency {
-                            amount: report.debit_total
+                thead {
+                    tr {
+                        th {
+                            class: "border-top border-bottom border-start border-end",
+                            colspan: 3,
+                            "Debit"
+                        }
+                        th {
+                            class: "border-top border-bottom border-start border-end",
+                            colspan: 3,
+                            "Credit"
                         }
                     }
-                    th {
-                        class: "border-top border-bottom border-start",
-                        colspan: 2,
-                        "Total"
+                    tr {
+                        th {
+                            class: "border-top border-bottom border-start",
+                            "Category"
+                        }
+                        th {
+                            class: "border-top border-bottom",
+                            "Amount"
+                        }
+                        th {
+                            class: "border-top border-bottom border-end",
+                            "Total"
+                        }
+                        th {
+                            class: "border-top border-bottom border-start",
+                            "Category"
+                        }
+                        th {
+                            class: "border-top border-bottom",
+                            "Amount"
+                        }
+                        th {
+                            class: "border-top border-bottom border-end",
+                            "Total"
+                        }
                     }
-                    th {
-                        class: "border-top border-bottom border-end text-end",
-                        Currency {
-                            amount: report.credit_total
+                }
+                tbody {
+                    for group in report.groups {
+                        Group {
+                            group
+                        }
+                    }
+
+                    tr {
+                        th {
+                            class: "border-top border-bottom border-start",
+                            colspan: 2,
+                            "Total"
+                        }
+                        th {
+                            class: "border-top border-bottom border-end text-end",
+                            Currency {
+                                amount: report.debit_total
+                            }
+                        }
+                        th {
+                            class: "border-top border-bottom border-start",
+                            colspan: 2,
+                            "Total"
+                        }
+                        th {
+                            class: "border-top border-bottom border-end text-end",
+                            Currency {
+                                amount: report.credit_total
+                            }
                         }
                     }
                 }
