@@ -36,6 +36,7 @@ pub static CATEGORY_GROUPS: &[CategoryGroup] = &[
             "Bank",
             "Beleggingen",
             "Rente",
+            "Schenking",
             "Sparen",
             "Studieschuld",
             "Studieschuld rente",
@@ -68,6 +69,10 @@ pub static CATEGORY_GROUPS: &[CategoryGroup] = &[
     CategoryGroup {
         name: "Vakantie",
         category_names: &["Vakantie"],
+    },
+    CategoryGroup {
+        name: "Vastgoed",
+        category_names: &["Vastgoeddiensten"],
     },
     CategoryGroup {
         name: "Vervoer",
