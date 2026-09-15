@@ -72,7 +72,7 @@ pub static CATEGORY_GROUPS: &[CategoryGroup] = &[
     },
     CategoryGroup {
         name: "Vastgoed",
-        category_names: &["Vastgoeddiensten"],
+        category_names: &["Vastgoed", "Vastgoeddiensten"],
     },
     CategoryGroup {
         name: "Vervoer",
@@ -110,6 +110,8 @@ pub static CATEGORY_GROUPS: &[CategoryGroup] = &[
             "Kantoorartikelen",
             "Klussen",
             "Tuin",
+            "Vereniging van eigenaren",
+            "Verhuizing",
             "Water",
         ],
     },
