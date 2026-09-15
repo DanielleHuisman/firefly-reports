@@ -84,8 +84,9 @@ fn Navigation(dates: Signal<Dates>) -> Element {
                 button {
                     class: "btn btn-primary",
                     onclick: move |_| dates.with_mut(|dates| {
-                        dates.start -= 1.year();
-                        dates.end -= 1.year();
+                        let date = dates.start - 1.year();
+                        dates.start = date.first_of_year();
+                        dates.end = date.last_of_year();
                     }),
                     "«"
                 }
@@ -93,8 +94,9 @@ fn Navigation(dates: Signal<Dates>) -> Element {
                 button {
                     class: "btn btn-primary",
                     onclick: move |_| dates.with_mut(|dates| {
-                        dates.start -= 1.month();
-                        dates.end -= 1.month();
+                        let date = dates.start - 1.month();
+                        dates.start = date.first_of_month();
+                        dates.end = date.last_of_month();
                     }),
                     "‹"
                 }
@@ -136,8 +138,9 @@ fn Navigation(dates: Signal<Dates>) -> Element {
                 button {
                     class: "btn btn-primary",
                     onclick: move |_| dates.with_mut(|dates| {
-                        dates.start += 1.month();
-                        dates.end += 1.month();
+                        let date = dates.end + 1.month();
+                        dates.start = date.first_of_month();
+                        dates.end = date.last_of_month();
                     }),
                     "›"
                 }
@@ -145,8 +148,9 @@ fn Navigation(dates: Signal<Dates>) -> Element {
                 button {
                     class: "btn btn-primary",
                     onclick: move |_| dates.with_mut(|dates| {
-                        dates.start += 1.year();
-                        dates.end += 1.year();
+                        let date = dates.end + 1.year();
+                        dates.start = date.first_of_year();
+                        dates.end = date.last_of_year();
                     }),
                     "»"
                 }
