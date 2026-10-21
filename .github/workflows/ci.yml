@@ -16,7 +16,7 @@ concurrency:
 jobs:
     commits:
         name: Commits
-        uses: NixySoftware/.github/.github/workflows/commits.yml@69872c1a394b92973a42797e1bd19441722101bc # v0.5.0
+        uses: NixySoftware/.github/.github/workflows/commits.yml@6b03162f358358a3a6e814434ada3a73997714a9 # v0.6.0
 
         permissions:
             contents: read
@@ -24,11 +24,11 @@ jobs:
 
     rust:
         name: Rust
-        uses: NixySoftware/.github/.github/workflows/rust.yml@69872c1a394b92973a42797e1bd19441722101bc # v0.5.0
+        uses: NixySoftware/.github/.github/workflows/rust.yml@6b03162f358358a3a6e814434ada3a73997714a9 # v0.6.0
 
     typescript:
         name: TypeScript
-        uses: NixySoftware/.github/.github/workflows/typescript.yml@69872c1a394b92973a42797e1bd19441722101bc # v0.5.0
+        uses: NixySoftware/.github/.github/workflows/typescript.yml@6b03162f358358a3a6e814434ada3a73997714a9 # v0.6.0
 
         with:
             enable-lint: false
