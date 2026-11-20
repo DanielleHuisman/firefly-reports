@@ -1,9 +1,9 @@
 # Base
 
-FROM rust:latest AS base
+FROM rust:latest@sha256:223cc32ddca8f3ee90c436dbc94b6b5f052ea7f9653c5201e9612f08ad7d21b8 AS base
 
-RUN curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
-RUN cargo binstall -y cargo-chef@0.1.77 sccache@0.15.0
+RUN BINSTALL_VERSION=v1.27.0 curl -L --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/cargo-bins/cargo-binstall/main/install-from-binstall-release.sh | bash
+RUN cargo binstall -y cargo-chef@0.1.78 sccache@0.19.0
 ENV RUSTC_WRAPPER=sccache SCCACHE_DIR=/sccache
 
 ARG RELEASE
@@ -25,7 +25,7 @@ RUN --mount=type=cache,target=/usr/local/cargo/registry \
 
 FROM base AS builder
 
-RUN cargo binstall -y dioxus-cli@0.7.9
+RUN cargo binstall -y dioxus-cli@0.7.10
 
 WORKDIR /usr/src/firefly-reports
 
@@ -43,7 +43,7 @@ RUN --mount=type=cache,target=/usr/local/cargo/registry \
 
 # Container
 
-FROM debian:trixie-slim
+FROM debian:trixie-slim@sha256:a72b4433de1cf7d6bae0c4cee74d0547f58601a643b3375f070c51600d63b6b2
 
 RUN apt-get update && apt-get install -y ca-certificates && rm -rf /var/lib/apt/lists/*
 
