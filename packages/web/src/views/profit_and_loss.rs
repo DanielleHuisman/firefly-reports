@@ -1,6 +1,6 @@
 use dioxus::{core::throw_error, prelude::*};
 use firefly_reports_api::profit_and_loss_report;
-use jiff::{ToSpan, Zoned, civil::Date};
+use jiff::{ToSpan, ZonedDateTime, civil::Date};
 
 use crate::components::profit_and_loss_table::ProfitAndLossTable;
 
@@ -17,10 +17,18 @@ pub fn ProfitAndLoss(start: Option<String>, end: Option<String>) -> Element {
         Dates {
             start: start
                 .and_then(|start| start.parse().ok())
-                .unwrap_or_else(|| Zoned::now().first_of_month().expect("valid date").date()),
-            end: end
-                .and_then(|end| end.parse().ok())
-                .unwrap_or_else(|| Zoned::now().last_of_month().expect("valid date").date()),
+                .unwrap_or_else(|| {
+                    ZonedDateTime::now()
+                        .first_of_month()
+                        .expect("valid date")
+                        .date()
+                }),
+            end: end.and_then(|end| end.parse().ok()).unwrap_or_else(|| {
+                ZonedDateTime::now()
+                    .last_of_month()
+                    .expect("valid date")
+                    .date()
+            }),
         }
     });
 
@@ -165,8 +173,8 @@ fn Navigation(dates: Signal<Dates>) -> Element {
                     onclick: move |_| dates.with_mut(|dates| {
                         #[expect(clippy::expect_used)]
                         {
-                            dates.start = Zoned::now().first_of_month().expect("valid date").date();
-                            dates.end = Zoned::now().last_of_month().expect("valid date").date();
+                            dates.start = ZonedDateTime::now().first_of_month().expect("valid date").date();
+                            dates.end = ZonedDateTime::now().last_of_month().expect("valid date").date();
                         }
                     }),
                     "Current month"
@@ -177,8 +185,8 @@ fn Navigation(dates: Signal<Dates>) -> Element {
                     onclick: move |_| dates.with_mut(|dates| {
                         #[expect(clippy::expect_used)]
                         {
-                            dates.start = Zoned::now().first_of_year().expect("valid date").date();
-                            dates.end = Zoned::now().last_of_year().expect("valid date").date();
+                            dates.start = ZonedDateTime::now().first_of_year().expect("valid date").date();
+                            dates.end = ZonedDateTime::now().last_of_year().expect("valid date").date();
                         }
                     }),
                     "Current year"

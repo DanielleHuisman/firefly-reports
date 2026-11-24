@@ -1620,7 +1620,7 @@ dependencies = [
  "firefly-reports-api",
  "icu",
  "itertools",
- "jiff 0.2.46",
+ "jiff 1.0.2",
  "rust_decimal",
  "shield",
  "shield-bootstrap",
@@ -2673,12 +2673,10 @@ dependencies = [
  "jiff-core 0.1.8",
  "jiff-static 0.2.46",
  "jiff-tzdb-platform 0.1.3",
- "js-sys",
  "log",
  "portable-atomic",
  "portable-atomic-util",
  "serde_core",
- "wasm-bindgen",
  "windows-link",
 ]
 
@@ -2691,10 +2689,12 @@ dependencies = [
  "jiff-core 1.0.1",
  "jiff-static 1.0.2",
  "jiff-tzdb-platform 1.0.0",
+ "js-sys",
  "log",
  "portable-atomic",
  "portable-atomic-util",
  "serde_core",
+ "wasm-bindgen",
  "windows-link",
 ]
 
